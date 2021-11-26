@@ -190,6 +190,34 @@ ft = angle(2*exp(1i*(t+pi/6)));
 
 ------
 
+### subs()
+
+#### 	description
+
+​	替换变量	subs(S,old,new)，在S表达式中用新变量替换旧变量，旧在前
+
+#### 	example
+
+```
+y_tao = subs(f,t,tao)*subs(h,t,t-tao);
+```
+
+------
+
+### int()
+
+#### 	description
+
+​	求定积分	int(y,x,a,b)求y关于x的定积分，x取a～b
+
+#### 	example
+
+```
+y = int(y_tao,tao,0,t);
+```
+
+------
+
 
 
 ------
@@ -439,4 +467,50 @@ grid on;
 output：
 
 ![image-20211112100615825](C:\Users\Amor\AppData\Roaming\Typora\typora-user-images\image-20211112100615825.png)
+
+------
+
+## 卷积积分的计算
+
+### 1.符号法
+
+先定义syms tao，写出两个函数表达式后用subs函数进行变量替换，最后求定积分即可；
+
+```matlab
+syms tao;
+t = sym('t','positive');
+
+f= exp(-t);
+h = t^2*exp(-2*t);
+y_tao = subs(f,t,tao)*subs(h,t,t-tao);
+y = int(y_tao,tao,0,t);
+fplot(y,[0,15]);
+grid on;
+```
+
+### 2.数值法
+
+先定义无穷小量delta = 0.01，然后表达出两式子，用conv 函数画卷积，再用n=length确定卷积的长度，然后（0:n-1）*delta+t_start确定时间轴的起始与长度,注意这里t_start是仿真运算中自己定义的信号的起始的和
+
+```matlab
+delta = 0.01;
+t = 0:delta:15;
+%算卷积
+f_t = exp(-t);
+h_t = t.*t.*exp(-2*t);
+y = conv(f_t,h_t);
+%确定时间轴起始位置和长度
+n = length(y);
+t_y = (0:n-1)*delta;
+
+plot(t_y,y)
+axis([0,15,-0.01,10])
+grid on;
+```
+
+
+
+
+
+
 
