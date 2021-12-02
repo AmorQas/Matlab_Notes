@@ -510,7 +510,7 @@ grid on;
 
 ------
 
-## 傅里叶变换
+## 傅里叶变换及反变换
 
 ### 1.傅里叶变换数值法流程
 
@@ -520,6 +520,46 @@ grid on;
 4. 代入所给表达式，表示出ft
 5. 代入Fw = delta* ft * exp（- j* t * w）
 6. 幅度谱abs，相位谱angle
+
+### 2.example
+
+求信号
+$$
+f(t)=sin(2pi(t-1))/pi(t-1)
+$$
+的傅里叶变换，并绘出其幅度谱和相位谱
+
+```matlab
+delta = 0.03;
+%注意这里的delta不可取0.01，因为分母会出现为0的情况
+t = -10:delta:10;
+w = -10:delta:10;
+
+ft = sin(2*pi*(t-1))./(pi*(t-1));
+Fw = delta*ft*exp(-1i*t'*w);
+%注意这里一定是t’，并且不必用.*只需要用*
+
+subplot(3,1,1)
+plot(t,ft);
+title('ft');
+
+subplot(3,1,2)
+plot(w,abs(Fw));
+title('幅度谱');
+
+subplot(3,1,3)
+plot(w,angle(Fw));
+title('angle');
+
+```
+
+### 3.傅里叶逆变换
+
+利用对偶性质可以得出
+
+f =  1/2* pi* delta * F * exp(j * w' *t)
+
+
 
 
 
