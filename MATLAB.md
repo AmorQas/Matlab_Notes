@@ -218,7 +218,37 @@ y = int(y_tao,tao,0,t);
 
 ------
 
+### tf(num,den)
 
+#### 	description
+
+​	产生或者转换传递函数的系统模型,num是H的分子，den是分母
+
+#### 	example
+
+​	对于微分方程
+$$
+b2*y''+b1*y'+b0*y=a2*f''+a1*f'+a0*f
+$$
+​	num = [a2,a1,a0]
+
+​	den =  [b2,b1,b0]
+
+​	sys = tf(num,den)
+
+​	注意有缺项要补0
+
+------
+
+### lsim(sys,f,t)
+
+#### 	description
+
+​	数值法求解零状态响应，sys是系统模型，由tf()函数生成，f是输入函数，t是时间范围
+
+#### 	example
+
+​	no
 
 ------
 
@@ -512,7 +542,7 @@ grid on;
 
 ## 傅里叶变换及反变换
 
-### 1.傅里叶变换数值法流程
+### 1.非周期函数傅里叶变换数值法流程
 
 1. 设出Δ（用delta表示）
 2. 设定t的取值范围，delta间距
@@ -559,7 +589,41 @@ title('angle');
 
 f =  1/2* pi* delta * F * exp(j * w' *t)
 
+------
 
+## 求解系统响应
+
+### 1.求解零状态响应
+
+​	使用lsim函数进行求解
+
+#### 	example:
+
+​	对于LTI系统的微分方程：
+
+​	
+$$
+y''+5y'+6y = 6f
+$$
+​	其中
+$$
+f=10sin(2pi*t)u(t)
+$$
+​	使用matlab绘制出0～5范围内系统零状态响应yt的波形图
+
+```matlab
+clear all;
+
+t = 0:0.01:5;
+ft = 10*sin(2*pi*t).*stepfun(t,0);
+
+num = 6;
+den = [1,5,6];
+sys = tf(num,den);
+
+yt = lsim(sys,ft,t);
+plot(t,yt);
+```
 
 
 
