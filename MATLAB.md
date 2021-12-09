@@ -252,6 +252,66 @@ $$
 
 ------
 
+### dsolve
+
+#### 	description
+
+​	解方程，dsolve(eq,cond),eq代表等式equations,cond代表条件conditions
+
+#### 	example
+
+```matlab
+eq = 'D3y+2*D2y+Dy=0';
+cond = 'D2y(0)=2,Dy(0)=1,y(0)=1';
+answer = dsolve(eq,cond);
+disp(answer);
+
+output:5 - 3*t*exp(-t) - 4*exp(-t)
+```
+
+------
+
+### impulse
+
+#### 	description
+
+​	求解冲击响应，impulse(sys,t),sys代表系统模型，t代表时间范围
+
+#### 	example
+
+```matlab
+num = [1,16];
+den = [1,2,32];
+sys = tf(num,den);
+
+t = 0:0.01:4;
+ht = impulse(sys,t);
+plot(t,ht);
+grid on;
+```
+
+------
+
+### step
+
+#### 	description
+
+​	求解阶跃响应，step(sys,t)
+
+#### 	example
+
+```matlab
+$无
+```
+
+------
+
+
+
+
+
+------
+
 
 
 ## 绘制函数图像
@@ -593,7 +653,27 @@ f =  1/2* pi* delta * F * exp(j * w' *t)
 
 ## 求解系统响应
 
-### 1.求解零状态响应
+### 1.求解零输入响应
+
+​	使用desolve进行解方程即可
+
+​	for example：
+$$
+y'''(t)+2y''(t)+y'(t)=0
+$$
+​	求解零输入响应，其中起始条件：y''(0-)=2,y'(0-)=1,y(0-)=1;
+
+```matlab
+eq = 'D3y+2*D2y+Dy=0';
+cond = 'D2y(0)=2,Dy(0)=1,y(0)=1';
+answer = dsolve(eq,cond);
+disp(answer);
+
+```
+
+​	注意这里的cond的选择，当0-时刻到0+时刻没有输入时，时刻直接选0是可以的，但是有输入的话要选择-0.01来代表0-时刻
+
+### 2.求解零状态响应
 
 ​	使用lsim函数进行求解
 
@@ -623,6 +703,52 @@ sys = tf(num,den);
 
 yt = lsim(sys,ft,t);
 plot(t,yt);
+```
+
+### 3.求解冲击响应与阶跃响应
+
+​	冲击响应：impulse(sys,t)
+
+​	阶跃响应： step(sys,t)
+
+### 4.求解频率响应
+
+​	for example：
+$$
+H(w)=1/(-w^2+3jw+2)
+$$
+​	若外加激励信号为
+$$
+f(t)=5cos(t)+2cos(10t)
+$$
+​	求解稳态响应
+
+```matlab
+t = -10:0.01:10;
+w = -10:0.01:10;
+
+xt = 5*cos(t)+2*cos(10*t);
+subplot(3,1,1);
+plot(t,xt);
+title('xt');
+grid on;
+
+H = 1./(-w.*w+3j*w+2);
+H1 = H(w==1);
+H2 = H(w==10);
+ang1 = angle(H1);
+abs1 = abs(H1);
+ang2 = angle(H2);
+abs2 = abs(H2);
+
+yt = 5*abs1*cos(t+ang1)+2*abs2*cos(10*t+ang2);
+subplot(3,1,2);
+plot(t,yt);
+title('yt');
+
+subplot(3,1,3);
+plot(w,H);
+title('H');
 ```
 
 
